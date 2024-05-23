@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:tinder_bromas/megusta.dart';
+//import biblioteca para guardar instancias de la Api y mostrarla en los otros ficheros
+import 'package:shared_preferences/shared_preferences.dart';
 import 'megusta.dart';
+import 'nomegusta.dart';
 
 void main() {
   runApp(const MyApp());
@@ -20,6 +23,8 @@ class MyApp extends StatelessWidget {
         '/': (context) => HomePage(), // Esta es tu página de inicio
         '/megusta': (context) =>
             MegustaPage(), // Esta es la ruta a la página MegustaPage
+        '/nomegusta': (context) =>
+            NomegustaPage(), // Esta es la ruta a la página NomegustaPage
       },
     );
   }
@@ -50,15 +55,32 @@ class HomePage extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            ElevatedButton(
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => MegustaPage()),
-                );
-              },
-              child: Text('Ir a Me Gusta'),
-            ),
+            Stack(children: [
+              Align(
+                alignment: Alignment.topLeft,
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: ElevatedButton(
+                    onPressed: () {
+                      Navigator.pushNamed(context, '/nomegusta');
+                    },
+                    child: Text('Ir a No Me Gusta'),
+                  ),
+                ),
+              ),
+              Align(
+                alignment: Alignment.topRight,
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: ElevatedButton(
+                    onPressed: () {
+                      Navigator.pushNamed(context, '/megusta');
+                    },
+                    child: Text('Ir a Me Gusta'),
+                  ),
+                ),
+              ),
+            ]),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
@@ -89,9 +111,9 @@ class HomePage extends StatelessWidget {
                 SizedBox(width: 10), // Espacio entre los botones
                 ElevatedButton(
                   onPressed: () {
-                    // Lógica para el botón de me gusta
+                    // Lógica para el botón de no me gusta
                   },
-                  //Iconno de Like
+                  //Iconno de Dislike
                   child: Icon(Icons.thumb_up),
                 ),
               ],
