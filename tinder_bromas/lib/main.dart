@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'megusta.dart';
+import 'megusta.dart'; // Ensure this import is correct and points to the file where MegustaPage is defined
+import 'nomegusta.dart'; // Ensure this import is correct and points to the file where NomegustaPage is defined
 
 void main() {
   runApp(const MyApp());
@@ -19,6 +20,8 @@ class MyApp extends StatelessWidget {
         '/': (context) => HomePage(), // Esta es tu página de inicio
         '/megusta': (context) =>
             MegustaPage(likedJokes: []), // Providing an initial empty list
+        '/nomegusta': (context) =>
+            NomegustaPage(dislikedJokes: []), // Providing an initial empty list
       },
     );
   }
@@ -47,10 +50,17 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   List<String> likedJokes = [];
+  List<String> dislikedJokes = [];
 
-  void addJokeToList(String joke) {
+  void addJokeToLikedList(String joke) {
     setState(() {
       likedJokes.add(joke);
+    });
+  }
+
+  void addJokeToDislikedList(String joke) {
+    setState(() {
+      dislikedJokes.add(joke);
     });
   }
 
@@ -64,18 +74,37 @@ class _HomePageState extends State<HomePage> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            ElevatedButton(
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => MegustaPage(
-                      likedJokes: likedJokes,
-                    ),
-                  ),
-                );
-              },
-              child: Text('Ir a Me Gusta'),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                ElevatedButton(
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => MegustaPage(
+                          likedJokes: likedJokes,
+                        ),
+                      ),
+                    );
+                  },
+                  child: Text('Ir a Me Gusta'),
+                ),
+                SizedBox(width: 16),
+                ElevatedButton(
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => NomegustaPage(
+                          dislikedJokes: dislikedJokes,
+                        ),
+                      ),
+                    );
+                  },
+                  child: Text('Ir a No Me Gusta'),
+                ),
+              ],
             ),
             FutureBuilder<String>(
               future: fetchData(),
@@ -98,27 +127,17 @@ class _HomePageState extends State<HomePage> {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          GestureDetector(
-                            onPanEnd: (DragEndDetails details) {
-                              if (details.velocity.pixelsPerSecond.dx > 0) {
-                                // Swipe Right - replace this with your like logic
-                              } else if (details.velocity.pixelsPerSecond.dx <
-                                  0) {
-                                // Swipe Left - replace this with your dislike logic
-                              }
+                          ElevatedButton.icon(
+                            onPressed: () {
+                              addJokeToDislikedList(snapshot.data!);
                             },
-                            child: ElevatedButton.icon(
-                              onPressed: () {
-                                // Lógica para el botón de no me gusta
-                              },
-                              icon: Icon(Icons.thumb_down),
-                              label: Text('No me gusta'),
-                            ),
+                            icon: Icon(Icons.thumb_down),
+                            label: Text('No me gusta'),
                           ),
                           SizedBox(width: 16),
                           ElevatedButton.icon(
                             onPressed: () {
-                              addJokeToList(snapshot.data!);
+                              addJokeToLikedList(snapshot.data!);
                             },
                             icon: Icon(Icons.thumb_up),
                             label: Text('Me gusta'),
