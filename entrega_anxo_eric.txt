@@ -1,0 +1,7 @@
+Hola Xavi, t'entreguem això en comptes de l'app comprimida ja que supera el pes màxim i no ens la deixa penjar al Moodle.
+Et passem el link al repositori on tenim la app.
+
+https://github.com/anxoITIC/bromaTinder
+
+Si vols el fitxer ZIP, l'he penjat a Google Drive per a que el puguis descarregar. Aquí el link:
+https://drive.google.com/file/d/1kuQ4GXlGMMhMuknqkDnn3Bml2h3zA36W/view?usp=sharing
