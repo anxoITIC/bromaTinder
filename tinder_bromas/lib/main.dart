@@ -81,17 +81,11 @@ class HomePage extends StatelessWidget {
                 ),
               ),
             ]),
+
+            //Botones de Me Gusta y No Me Gusta
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                ElevatedButton(
-                  onPressed: () {
-                    // Lógica para el botón de no me gusta
-                  },
-                  //Iconno de Dislike
-                  child: Icon(Icons.thumb_down),
-                ),
-                SizedBox(width: 10), // Espacio entre los botones
                 Expanded(
                   child: Center(
                     //Centro el texto que recibi de la API
