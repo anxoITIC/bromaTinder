@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
 import 'megusta.dart'; // Ensure this import is correct and points to the file where MegustaPage is defined
 import 'nomegusta.dart'; // Ensure this import is correct and points to the file where NomegustaPage is defined
 
@@ -52,23 +53,51 @@ class _HomePageState extends State<HomePage> {
   List<String> likedJokes = [];
   List<String> dislikedJokes = [];
 
+  @override
+  void initState() {
+    super.initState();
+    _loadJokes();
+  }
+
+  // Carga las listas de chistes guardadas
+  Future<void> _loadJokes() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    setState(() {
+      likedJokes = prefs.getStringList('likedJokes') ?? [];
+      dislikedJokes = prefs.getStringList('dislikedJokes') ?? [];
+    });
+    print('Liked Jokes Loaded: $likedJokes');
+    print('Disliked Jokes Loaded: $dislikedJokes');
+  }
+
+  // Guarda las listas de chistes
+  Future<void> _saveJokes() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setStringList('likedJokes', likedJokes);
+    await prefs.setStringList('dislikedJokes', dislikedJokes);
+    print('Liked Jokes Saved: $likedJokes');
+    print('Disliked Jokes Saved: $dislikedJokes');
+  }
+
   void addJokeToLikedList(String joke) {
     setState(() {
       likedJokes.add(joke);
     });
+    _saveJokes();
   }
 
   void addJokeToDislikedList(String joke) {
     setState(() {
       dislikedJokes.add(joke);
     });
+    _saveJokes();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Center(child: Text('API BROMAS')), // Centro el Titulo
+        title: Center(child: Text('EL BROMITAS')), // Centro el Titulo
       ),
       body: Center(
         child: Column(
@@ -82,20 +111,6 @@ class _HomePageState extends State<HomePage> {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => MegustaPage(
-                          likedJokes: likedJokes,
-                        ),
-                      ),
-                    );
-                  },
-                  child: Text('Ir a Me Gusta'),
-                ),
-                SizedBox(width: 16),
-                ElevatedButton(
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
                         builder: (context) => NomegustaPage(
                           dislikedJokes: dislikedJokes,
                         ),
@@ -103,6 +118,20 @@ class _HomePageState extends State<HomePage> {
                     );
                   },
                   child: Text('Ir a No Me Gusta'),
+                ),
+                SizedBox(width: 16),
+                ElevatedButton(
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => MegustaPage(
+                          likedJokes: likedJokes,
+                        ),
+                      ),
+                    );
+                  },
+                  child: Text('Ir a Me Gusta'),
                 ),
               ],
             ),
